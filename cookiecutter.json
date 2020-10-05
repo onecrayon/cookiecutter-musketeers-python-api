@@ -1,0 +1,10 @@
+{
+    "directory_name": "new-project",
+    "project_name": "New Project",
+    "project_description": "My new project.",
+    "license": "All Rights Reserved",
+    "version": "0.1.0",
+    "author": "My Name <me@example.com>",
+    "framework": ["FastAPI", "Falcon 3 (WSGI)"],
+    "poetry_version": "1.1.1"
+}

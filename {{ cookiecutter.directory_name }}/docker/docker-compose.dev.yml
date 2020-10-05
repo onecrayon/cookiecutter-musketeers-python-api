@@ -1,0 +1,32 @@
+---
+
+# This docker-compose file is required to bind ports and volumes in development.
+
+version: '3.7'
+services:
+    postgres:
+        ports:
+            - '5432:5432'
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+
+    api:
+        image: '{{ cookiecutter.directory_name }}:dev'
+        build:
+            target: development_build
+            args:
+                ENV: development
+        ports:
+            # We only bind ports directly in development:
+            - '8000:8000'
+        volumes:
+            # We only mount source code in development:
+            - .:/code
+        {% if cookiecutter.framework == "FastAPI" or cookiecutter.framework == "Falcon 3 (ASGI)" -%}
+        command: python -m uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+        {% else -%}
+        command: gunicorn --workers=2 api.main:app --reload --bind=0.0.0.0:8000
+        {%- endif %}
+
+volumes:
+    pgdata:

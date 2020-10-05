@@ -1,0 +1,14 @@
+# Ignore environment file
+.env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest coverage output
+.coverage
+htmlcov/
+
+# Editor files
+.vscode/.ropeproject

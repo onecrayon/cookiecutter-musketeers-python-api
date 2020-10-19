@@ -18,7 +18,7 @@ make sure you've got the right version of Python (which could be different acros
 projects), and a number of other headaches.
 
 A [3 Musketeers](https://3musketeers.io/) project requires you to populate a `.env` file,
-and run **a single comand**. And it works exactly the same on macOS, Windows, and Linux.
+and run **a single command**. And it works exactly the same on macOS, Windows, and Linux.
 
 You'll never look back.
 

@@ -82,4 +82,12 @@ app = falcon.App(middleware=[
 ])
 {%- endif %}
 
-# TODO: define routes, include routers, etc. here
+# A health-check route is required to deploy on Render.com
+from api.views import health_check  # noqa
+{% if cookicutter.framework == "FastAPI" -%}
+app.include_router(health_check.router)
+{% else -% }
+app.add_route('/health-check', health_check.HealthCheck())
+{%- endif %}
+
+# TODO: define other API routes, include routers, etc. here

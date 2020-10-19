@@ -147,3 +147,8 @@ The underlying Dockerfile uses the following tools, pinned to specific release v
 
 In order to update these tools, you must update their pinned version in `Dockerfile`
 and (for Poetry) in `pyproject.toml` then rebuild your API container using `make build`.
+
+## Deployment
+
+This project is configured to run on [Render.com](https://render.com) as a Docker service
+with a separate managed database. Specific instructions on deploying TBD.

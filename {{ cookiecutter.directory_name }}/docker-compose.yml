@@ -10,17 +10,15 @@
 
 version: '3.7'
 services:
-    postgres:
-        image: postgres:12.4
-        restart: always
-        env_file: .env
-
     api:
+        image: "{{ cookiecutter.directory_name }}:dev"
         build:
             context: .
-            dockerfile: ./docker/Dockerfile
+            cache_from:
+                - "{{ cookiecutter.directory_name }}:dev"
+                - "*"
         depends_on:
             - postgres
-        restart: always
+        restart: unless-stopped
         # env_file populates environment variables at runtime
         env_file: .env

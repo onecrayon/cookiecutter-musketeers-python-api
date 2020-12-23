@@ -9,8 +9,8 @@ import falcon
 {% if cookiecutter.framework == "Falcon 3 (ASGI)" -%}
 import falcon.asgi
 from sqlalchemy import MetaData
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.declarative import declarative_base
 {% else -%}
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
@@ -111,7 +111,7 @@ class SQLAlchemySessionManager:
             return
 
         if 'session' in req.context:
-            req.context.session.close()
+            await req.context.session.close()
 
 # Create our main application
 app = falcon.asgi.App(middleware=[

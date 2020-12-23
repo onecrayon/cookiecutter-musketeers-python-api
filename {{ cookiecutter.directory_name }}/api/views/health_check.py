@@ -137,9 +137,10 @@ class HealthCheck:
         }
         # Verify that the database is up and running
         try:
-            meaning_of_life_the_universe_and_everything = await req.context.session.execute(
+            result = await req.context.session.execute(
                 select(literal_column("42"))
-            ).scalar()
+            )
+            meaning_of_life_the_universe_and_everything = result.scalar()
             assert meaning_of_life_the_universe_and_everything == 42
         except:
             logger.error("Postgres health-check FAILED", exc_info=True)

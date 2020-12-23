@@ -1,4 +1,4 @@
-FROM python:3.8.6 as development_build
+FROM python:3.9.1 as development_build
 
 # This is only available at build, and is a required variable
 ARG ENV

@@ -19,7 +19,8 @@ run:      ## Run development server
 	@docker-compose up
 
 test:     ## Execute test suite
-	@docker-compose -p "{{ cookiecutter.directory_name }}_tests" run --rm -w /code api
+	@docker-compose -p "{{ cookiecutter.directory_name }}_tests" run --rm -w /code api \
+		pytest --cov=api --cov-config=.coveragerc --cov-report=term:skip-covered --cov-report=html
 
 # This ensures that even if they pass in an empty value, we default to "head"
 ifndef REV

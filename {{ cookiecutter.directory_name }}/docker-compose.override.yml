@@ -4,10 +4,10 @@
 # and is automatically loaded when running a docker-compose command without passing
 # specific files with the `-f` flag.
 
-version: '3.7'
+version: '3.8'
 services:
     postgres:
-        image: postgres:12.4
+        image: postgres:11.10
         restart: unless-stopped
         networks:
             - localnet

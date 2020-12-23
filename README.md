@@ -2,20 +2,20 @@
 
 This is a [Cookiecutter](https://cookiecutter.readthedocs.io/) template that bootstraps
 a "3 Pythoneers" project using either [FastAPI](https://fastapi.tiangolo.com/) or
-[Falcon 3](https://falconframework.org/) (WSGI only, for now).
+[Falcon 3](https://falconframework.org/) (WSGI or ASGI).
 
-**Please note:** Falcon 3 is currently an alpha release! I am including it because the
-WSGI functionality is quite stable (mostly unchanged from Falcon 2). For ASGI under
-Falcon 3, you will need to adjust the template to use SQLAlchemy 1.4 pre-release and
-`asyncpg` instead of `psycopg2`(the current Python dependencies all assume you're using
-synchronous SQLAlchemy). I would have supported this out of the box, but I haven't had
-a chance to test this setup myself, yet.
+**Please note:** Falcon 3 is currently a pre-release! I am including it because the
+WSGI functionality is quite stable (mostly unchanged from Falcon 2). If you use ASGI under
+Falcon 3, you will additionally be using the SQLAlchemy 1.4 pre-release and
+`asyncpg` instead of `psycopg2`. **Async SQLAlchemy requires using SQLAlchemy 2.0 style
+queries!** Please see the [SQLAlchemy Changelog](https://docs.sqlalchemy.org/en/14/changelog/migration_14.html#asynchronous-io-support-for-core-and-orm)
+for more details.
 
 ### Why 3 Musketeers?
 
 Python APIs are really annoying to develop locally, because you have to install a database,
 make sure you've got the right version of Python (which could be different across different
-projects), and a number of other headaches.
+projects), plus a number of other headaches.
 
 A [3 Musketeers](https://3musketeers.io/) project requires you to populate a `.env` file,
 and run **a single command**. And it works exactly the same on macOS, Windows, and Linux.
@@ -37,7 +37,7 @@ following:
 * Make
 
 After installing the dependencies above, simply run `make` from the root directory! Once the
-Docker container is built, you will be able to go through the standard Cookiecutter command
+Docker container is built, you will be able to proceed through the standard Cookiecutter command
 line interface to create your project. You can then move your newly created project folder
 out of this project's root directory, and you'll be good to go!
 

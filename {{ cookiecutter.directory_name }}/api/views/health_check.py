@@ -83,7 +83,7 @@ def health_check(response: Response, session: db.Session = Depends(get_session))
 
     return output
 
-{% else -%}
+{% elif cookiecutter.framework == "Falcon 3 (WSGI)" -%}
 import logging
 
 import falcon
@@ -107,6 +107,38 @@ class HealthCheck:
         try:
             meaning_of_life_the_universe_and_everything = req.context.session.query(
                 literal_column("42")
+            ).scalar()
+            assert meaning_of_life_the_universe_and_everything == 42
+        except:
+            logger.error("Postgres health-check FAILED", exc_info=True)
+            resp.status = falcon.HTTP_SERVICE_UNAVAILABLE
+            resp.media['status'] = 'error'
+            resp.media['services']['database'] = 'error'
+
+{% else -%}
+import logging
+
+import falcon
+from sqlalchemy import select
+from sqlalchemy.sql.expression import literal_column
+
+
+logger = logging.getLogger(__name__)
+
+class HealthCheck:
+    """Check internal systems for faults"""
+    async def on_get(self, req: falcon.Request, resp: falcon.Response):
+        # Default okay response
+        resp.media = {
+            'status': 'okay',
+            'services': {
+                'database': 'okay',
+            }
+        }
+        # Verify that the database is up and running
+        try:
+            meaning_of_life_the_universe_and_everything = await req.context.session.execute(
+                select(literal_column("42"))
             ).scalar()
             assert meaning_of_life_the_universe_and_everything == 42
         except:

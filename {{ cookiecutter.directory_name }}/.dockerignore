@@ -52,9 +52,6 @@ coverage.xml
 Dockerfile
 docker-compose.yml
 docker-compose.override.yml
-docker/docker-compose.dev.yml
-docker/docker-compose.test.yml
-docker/docker-compose.prod.yml
 
 # JetBrains
 .idea/

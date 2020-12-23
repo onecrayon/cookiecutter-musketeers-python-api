@@ -8,19 +8,15 @@
 # Many patterns here lifted directly from:
 # <https://github.com/wemake-services/wemake-django-template>
 
-version: '3.7'
+version: '3.8'
 services:
-    postgres:
-        image: postgres:12.4
-        restart: always
-        env_file: .env
-
     api:
+        image: "{{ cookiecutter.directory_name }}:dev"
         build:
             context: .
-            dockerfile: ./docker/Dockerfile
-        depends_on:
-            - postgres
-        restart: always
+            cache_from:
+                - "{{ cookiecutter.directory_name }}:dev"
+                - "*"
+        restart: unless-stopped
         # env_file populates environment variables at runtime
         env_file: .env

@@ -145,5 +145,25 @@ The underlying Dockerfile uses the following tools, pinned to specific release v
 * [Tini](https://github.com/krallin/tini)
 * [Poetry](https://python-poetry.org/)
 
-In order to update these tools, you must update their pinned version in `docker/Dockerfile`
+In order to update these tools, you must update their pinned version in `Dockerfile`
 and (for Poetry) in `pyproject.toml` then rebuild your API container using `make build`.
+
+## Deployment
+
+This project is configured to run on [Render.com](https://render.com) as a Docker service
+with a separate managed database. To deploy:
+
+1. Create a new PostgreSQL Database, and make note of the internal connection settings
+2. Create a new Web Service in Render pointing to your project's repo 
+3. Set the following settings:
+    * Docker Path: `./Dockerfile`
+    * Docker Build Context: `.`
+    * Docker Command: `/bin/bash -c cd /code && /gunicorn.sh`
+    * Health Check Path: `/health-check`
+4. Populate all environment variables using the standard Render environment settings, and
+   the database configuration from your Render database (uploading a `.env` file will not
+   work! These need to be defined explicitly as environment variables.)
+
+You're done! Once you've got your service setup, it will automatically deploy whenever you push
+to your chosen branch. Make sure to run migrations through the Render shell when necessary! This
+template does not currently provide a way to do that automatically.

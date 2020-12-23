@@ -7,6 +7,7 @@ from fastapi import FastAPI
 import falcon
 {%- endif %}
 {% if cookiecutter.framework == "Falcon 3 (ASGI)" -%}
+import falcon.asgi
 from sqlalchemy import MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
@@ -120,9 +121,9 @@ app = falcon.asgi.App(middleware=[
 
 # A health-check route is required to deploy on Render.com
 from api.views import health_check  # noqa
-{% if cookicutter.framework == "FastAPI" -%}
+{% if cookiecutter.framework == "FastAPI" -%}
 app.include_router(health_check.router)
-{% else -% }
+{% else -%}
 app.add_route('/health-check', health_check.HealthCheck())
 {%- endif %}
 

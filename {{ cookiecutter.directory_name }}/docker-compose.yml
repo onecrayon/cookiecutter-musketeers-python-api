@@ -1,7 +1,7 @@
 ---
 
 # Base Docker Compose file.
-# This defines the basic environments that are used for both develoment and
+# This defines the basic environments that are used for both development and
 # testing. Overrides are explicitly specified in the Makefile for their
 # relevant targets.
 #
@@ -20,3 +20,4 @@ services:
         restart: unless-stopped
         # env_file populates environment variables at runtime
         env_file: .env
+        restart: unless-stopped

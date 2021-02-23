@@ -11,29 +11,29 @@ readme = "README.md"
 authors = ["{{ cookiecutter.author }}"]
 
 [tool.poetry.dependencies]
-python = "3.9.1"
-alembic = "^1.4.3"
+python = "3.9.2"
+alembic = "^1.5.5"
 {% if cookiecutter.framework == "FastAPI" -%}
 fastapi = "^0.63.0"
 {% elif cookiecutter.framework.startswith("Falcon ") -%}
-falcon = "^3.0.0b1"
+falcon = "^3.0.0b2"
 pydantic = "^1.7.3"
 {%- endif %}
 {% if cookiecutter.framework == "Falcon 3 (ASGI)" -%}
-sqlalchemy = "^1.4.0b1"
-asyncpg = "^0.21.0"
+sqlalchemy = "^1.4.0b3"
+asyncpg = "^0.22.0"
 {% else -%}
-sqlalchemy = "^1.3.22"
+sqlalchemy = "^1.3.23"
 psycopg2 = "^2.8.6"
 {%- endif %}
 {% if cookiecutter.framework == "FastAPI" or cookiecutter.framework == "Falcon 3 (ASGI)" -%}
-uvicorn = "^0.13.2"
+uvicorn = "^0.13.4"
 {%- endif %}
 gunicorn = "^20.0.4"
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.2.1"
-pytest-cov = "^2.10.1"
+pytest = "^6.2.2"
+pytest-cov = "^2.11.1"
 sqlalchemy-utils = "^0.36.8"
 # These are used when developing in the Docker container with VSCode
 pylint = "^2.6.0"

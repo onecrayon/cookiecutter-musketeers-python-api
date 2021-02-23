@@ -1,4 +1,4 @@
-FROM python:3.9.1 as development_build
+FROM python:3.9.2 as development_build
 
 # Setup Python and pip environment variables
 ENV PYTHONFAULTHANDLER=1 \

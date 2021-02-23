@@ -3,6 +3,7 @@
 # Inspired by <https://gist.github.com/prwhite/8168133>
 DOCKER_RUN = docker-compose run --rm -e STANDALONE=true --no-deps -u root -w /code api
 DOCKER_RUN_DB = docker-compose run --rm -u root -w /code api
+DOCKER_COMPOSE_TESTS = docker-compose -p {{ cookiecutter.directory_name }}_tests -f docker-compose.yml -f docker/docker-compose.test.yml
 
 ##=== Welcome to {{ cookiecutter.project_name }}! ===
 
@@ -10,7 +11,7 @@ help:     ## Show this help.
 	@$(DOCKER_RUN) make _help
 
 _help:
-	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -E -e 's/: [a-z][ a-z-]+?[a-z](\s+)##/:\1/' | sed -e 's/##//'
 
 ##
 ##=== Local development ===
@@ -18,16 +19,16 @@ _help:
 run:      ## Run development server
 	@docker-compose up
 
-test:     ## Execute test suite
-	@docker-compose -p "{{ cookiecutter.directory_name }}_tests" run --rm -w /code api \
-		pytest --cov=api --cov-config=.coveragerc --cov-report=term:skip-covered --cov-report=html
+test:     ## Execute test suite; or specify target: `make test ARGS='api/tests/example'`
+	@(DOCKER_COMPOSE_TESTS) run --rm -w /code api \
+		pytest --cov=api --cov-config=.coveragerc --cov-report=term:skip-covered --cov-report=html $(ARGS)
 
 # This ensures that even if they pass in an empty value, we default to "head"
 ifndef REV
 override REV = head
 endif
 
-migrate:  ## Run database migrations; or specify a revision: `make migrate REV='head'`
+migrate: clean-api  ## Run database migrations; or specify a revision: `make migrate REV='head'`
 	@$(DOCKER_RUN_DB) alembic upgrade $(REV)
 
 ##
@@ -48,7 +49,11 @@ shell-db: ## Open a bash shell to API with the database running
 build:    ## Rebuild the main app container
 	@docker-compose build --no-cache api
 
-clean:    ## Clean up Docker containers, images, etc.
+clean-api:
 	@docker-compose down --remove-orphans
-	@docker-compose -p "{{ cookiecutter.directory_name }}_tests" down --remove-orphans
+
+clean-tests:
+	@$(DOCKER_COMPOSE_TESTS) down --remove-orphans
+
+clean: clean-api clean-tests    ## Clean up Docker containers, images, etc.
 	@echo 'All clean!'

@@ -46,7 +46,7 @@ site's API documentation at <http:localhost:8000>.
 
 From within the API docs, you can query the API directly and inspect its output.
 
-### VSCode: Developing within the Docker container
+### Configuring VSCode
 
 You can use [Visual Studio Code](https://code.visualstudio.com/) to develop directly within
 the Docker container, allowing you access to the Python environment (which means
@@ -65,21 +65,26 @@ without needing to run a make command). To do so:
 
 ```json
 {
-	"workspaceFolder": "/code",
-	"settings": {
-		"terminal.integrated.shell.linux": "/bin/bash",
-		"python.pythonPath": "/usr/local/bin/python3.8",
-		"python.linting.pylintEnabled": true,
-		"python.linting.enabled": true,
-		"editor.formatOnSave": true,
-		"python.formatting.provider": "black",
-		"editor.wordWrapColumn": 88
-	},
-	"remoteUser": "root",
-	"extensions": [
-		"editorconfig.editorconfig",
-		"ms-python.python"
-	]
+  "workspaceFolder": "/code",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "python.pythonPath": "/usr/local/bin/python3.9",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",
+    "[python]": {
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+      }
+    },
+    "editor.wordWrapColumn": 88
+  },
+  "remoteUser": "root",
+  "extensions": [
+    "editorconfig.editorconfig",
+    "ms-python.python"
+  ]
 }
 ```
 
@@ -91,6 +96,61 @@ to get working consistently.)
 in your attached container window will provide you access to the equivalent of `make shell`,
 but running the standard make commands there will result in Docker-in-Docker, which is not
 desirable in this instance.
+
+### Configuring PyCharm
+
+You can use [PyCharm](https://www.jetbrains.com/pycharm/) to develop directly within
+the Docker container, allowing you access to the Python environment (which means
+linting, access to Python tools, etc.). To do so:
+
+1. [Install PyCharm](https://www.jetbrains.com/pycharm/download/), if you haven't already
+2. In your favorite Terminal, run `make up` to ensure the local stack is running
+3. Open PyCharm's Settings (on Windows) or Preferences (on macOS)
+4. Under Project -> Python Interpreter, click the gear icon by the Python Interpreter dropdown and choose "Add..."
+5. Select "Docker Compose" as the type in the left sidebar 
+6. Select `api` under the "Service" dropdown
+7. Apply your changes and close the settings
+
+#### Debugging in PyCharm
+
+You will now have auto-completion, automatic imports, and code navigation capabilities in PyCharm.
+To enable local debugging:
+
+1. In the upper right of the main window, click "Add Configuration..."
+2. Click the "+" button and choose "Python" as the template
+3. Name your configuration whatever you like (e.g. `Local`)
+4. Select "Script path", switch it to "Module name", then enter `uvicorn` as the "Module name"
+5. Enter `api:app --reload --host 0.0.0.0 --port 8000` as the "Parameters"
+6. Choose the Python Interpreter you setup in the previous steps
+7. Apply your changes
+8. In your favorite Terminal, exit the running local stack (if it is still running)
+9. You can now launch a local stack (or debug a local stack) with the buttons in the upper right corner of the main
+   window (the stack should auto-reload as you save files)
+   
+#### Automatic code formatting in PyCharm
+
+This project is configured to use `isort` and `black` for import and code formatting, respectively.
+You can trigger formatting across the full project using `make format`, or you can also setup automatic
+formatting on a per-file basis within PyCharm (please note I haven't tested this on Windows, which might
+run into trouble due to different path formatting):
+
+1. Open PyCharm's Settings (on Windows) or Preferences (on macOS)
+2. Under Tools -> File Watchers, click the "+" button and choose the "custom" template
+3. Name your File Watcher whatever you like (e.g. "isort & black")
+4. Configure the following settings:
+    * File type: `Python`
+    * Scope: `Project Files`
+    * Program: `make`
+    * Arguments: `format FILEPATH=$FilePathRelativeToProjectRoot$`
+    * Working Directory and Environment Variables -> Working directory: `$ProjectFileDir$`
+    * Uncheck Advanced Options -> Auto-save edited files to trigger the watcher
+    * Uncheck Advanced Options -> Trigger the watcher on external changes
+
+If automatic formatting is behaving too slowly for your tastes, you can optionally install isort and black in
+your local environment and configure them that way:
+
+* https://github.com/pycqa/isort/wiki/isort-Plugins
+* https://black.readthedocs.io/en/stable/editor_integration.html
 
 ## Development
 
@@ -104,9 +164,10 @@ input and output. [Pytest](https://docs.pytest.org/en/latest/) is used for testi
 The primary entrypoint for the application is `api/main.py`. This file defines
 the main app and attaches all site routers. Site modules are organized as follows:
 
-* `api/views`: Route view {% if cookiecutter.framework == "FastAPI" %}functions{% else %}classes{% endif %}, typically organized by base URL segment.
 * `api/models`: Data models used to persist to and represent info from the database
+* `api/schemas`: Pydantic input/output schemas
 * `api/tests`: Integration tests (with some unit tests where integration testing is not feasible)
+* `api/views`: Route view {% if cookiecutter.framework == "FastAPI" %}functions{% else %}classes{% endif %}, typically organized by base URL segment.
 
 You will likely leverage the following files, as well:
 

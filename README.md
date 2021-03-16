@@ -1,5 +1,10 @@
 # Cookiecutter template for 3 Musketeers Python API
 
+**Please note:** After iterating on this project for a while, I ended up building out a
+more generic variant that allows you to build your desired Python server in a more *a la
+carte* fashion. I recommend using it instead (particularly if you need a server that does
+not use a database, needs an async database API with FastAPI, or similar): https://github.com/onecrayon/cookiecutter-musketeers-python
+
 This is a [Cookiecutter](https://cookiecutter.readthedocs.io/) template that bootstraps
 a "3 Pythoneers" project using either [FastAPI](https://fastapi.tiangolo.com/) or
 [Falcon 3](https://falconframework.org/) (WSGI or ASGI).
